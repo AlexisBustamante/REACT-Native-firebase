@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Button, TextInput, ScrollView, StyleSheet } from 'react-native';
+import { View, Button, TextInput, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import firebase from '../database/firebase'
 import { Timestamp } from "firebase/firestore";
 import { Avatar } from "@rneui/themed";
@@ -11,30 +11,42 @@ const CreateUserScreen = (props) => {
         email: '',
         phone: ''
     })
+    const [loading, setLoading] = useState(false);
 
     const handleChangeText = (name, value) => {
         setState({ ...state, [name]: value })
     }
 
     const saveNewUser = async () => {
+
         if (state.name === '') {
             alert('name requieed')
         } else {
+            setLoading(true)
             try {
-
                 await firebase.db.collection('users').add({
                     name: state.name,
                     email: state.email,
                     phone: state.phone,
                     created: Timestamp.now()
                 })
+                setLoading(false)
                 props.navigation.navigate("UsersList");
+
             } catch (error) {
+                setLoading(false)
                 console.error(error);
             }
         }
     }
 
+    if (loading) {
+        return (
+            <View style={[styles.containerL, styles.horizontal]}>
+                <ActivityIndicator size="large" color="#0000ff"></ActivityIndicator>
+            </View>
+        )
+    }
     return (
         <ScrollView style={styles.container}>
             <View style={{
@@ -89,6 +101,15 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#cccccc'
 
+    },
+    containerL: {
+        flex: 1,
+        justifyContent: "center"
+    },
+    horizontal: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 10
     }
 })
 

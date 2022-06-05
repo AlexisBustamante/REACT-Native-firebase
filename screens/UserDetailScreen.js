@@ -47,6 +47,7 @@ const UserDetailScreen = (props) => {
     const updateUser = async () => {
 
         try {
+            setLoading(true)
             const dbRef = firebase.db.collection('users').doc(props.route.params.userId);
             await dbRef.set({
                 name: user.name,
@@ -55,9 +56,11 @@ const UserDetailScreen = (props) => {
                 created:user.created
             });
             setUser(emptyUser);
+            setLoading(false)
             props.navigation.navigate('UsersList');
         } catch (error) {
             console.log(error);
+            setLoading(false)
         }
 
     
@@ -83,8 +86,6 @@ const UserDetailScreen = (props) => {
         )
     }
     return (
-
-
         <ScrollView style={styles.container}>
             <View style={{
                 flexDirection: "row",
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-around",
         padding: 10
-    }
+    },
 
 })
 
