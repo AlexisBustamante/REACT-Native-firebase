@@ -1,46 +1,82 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import SocialSignInButtons from "../components/SocialSignInButtons";
+import {
+    getAuth, createUserWithEmailAndPassword,
+    updateProfile, signInWithEmailAndPassword, onAuthStateChanged
+} from "firebase/auth";
 
-const SigninScreen = (props) => {
+const SignUpScreen = ({ navigation }) => {
     //**STATES */
-    const [username, setUsername] = useState("");
-    const [password, setpassword] = useState("");
-    const [passwordRepeat, setPasswordRepeat] = useState("");
-    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [username, setUsername] = useState("Nombre desconocido");
+    const [password, setpassword] = useState("123456");
+    const [passwordRepeat, setPasswordRepeat] = useState("123456");
+    const [email, setEmail] = useState("ale6@gmail.com");
+    const auth = getAuth();
 
+    //await signInWithEmailAndPassword(auth, email, password);
     //*****functions */
-    const onRegisterPress = () => {
-        console.warn("register");
+    const onRegisterPress = async () => {
+
+        if ((email != '') && (username != '') && (password != '') && (passwordRepeat != '')) {
+            try {
+                setLoading(true)
+                await createUserWithEmailAndPassword(auth, email, password)
+                await updateProfile(auth.currentUser, { displayName: username })
+                // props.navigation.navigate("HomeScreen");
+                console.log(auth.currentUser.displayName + " REGISTRO"); //PRUEBA ASI
+                setLoading(false)
+
+            } catch (error) {
+                setLoading(false)
+                const errorCode = error.code;
+                if (errorCode) {
+                    Alert.alert("Signup error", error.message);
+                }
+            }
+        } else {
+            alert('complete all fields')
+        }
+
     };
 
+
     const onTermsPress = () => {
-        console.warn("terms");
+        Alert.alert('Terms', 'I have no terms for this app, yet...')
     };
 
     const onPolicyPress = () => {
-        console.warn("Policy");
+        Alert.alert('Policy', 'I have no Policy for this app, yet...')
     };
 
     const onSignInPress = () => {
-        props.navigation.navigate('SignInScreen');
-
+        navigation.navigate('SignInScreen');
     }
 
     //****VIEWS * /
+
+    if (loading) {
+        return (
+            <View style={[styles.containerL, styles.horizontal]}>
+                <ActivityIndicator size="large" color="#0000ff"></ActivityIndicator>
+            </View>
+        )
+    }
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
                 <Text style={styles.title}>Create an Account</Text>
 
-                <CustomInput
-                    placeholder="Username"
+                <CustomInput placeholder="Username"
                     value={username}
-                    setValue={setUsername}
-                />
-                <CustomInput placeholder="Email" value={email} setValue={setEmail} />
+                    setValue={setUsername} />
+
+                <CustomInput placeholder="Email"
+                    value={email}
+                    setValue={setEmail} />
 
                 <CustomInput
                     placeholder="Password"
@@ -58,15 +94,12 @@ const SigninScreen = (props) => {
                     text={"Register"}
                     onPress={onRegisterPress}
                 ></CustomButton>
-
                 <Text style={styles.text}>
                     By registering, you confirm that you accept our
                     <Text style={styles.link} onPress={onTermsPress}> terms of use </Text>
                     and <Text style={styles.link} onPress={onPolicyPress}>Privacy Policy</Text>
                 </Text>
-
                 <SocialSignInButtons></SocialSignInButtons>
-
                 <CustomButton
                     text={"Have an account? Sign in"}
                     onPress={onSignInPress}
@@ -93,8 +126,17 @@ const styles = StyleSheet.create({
     text: { color: 'grey', marginVertical: 10 },
     link: {
         color: '#FDB075'
+    },
+    containerL: {
+        flex: 1,
+        justifyContent: "center"
+    },
+    horizontal: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 10
     }
 
 });
 
-export default SigninScreen;
+export default SignUpScreen;

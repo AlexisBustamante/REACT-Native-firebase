@@ -1,6 +1,9 @@
+
 import firebase from "firebase/compat/app"
 import "firebase/compat/firestore";
-import {Timestamp} from "firebase/firestore";
+import { Timestamp, getFirestore } from "firebase/firestore";
+import { initializeApp } from "firebase/app"
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCpqNNibkLTsBCXiKjXZfZlXytzA6pvg0E",
@@ -12,7 +15,6 @@ const firebaseConfig = {
     measurementId: "G-FPEKYKZCNB"
 };
 
-const app = firebase.initializeApp(firebaseConfig)
-const db = firebase.firestore(app)
-
-export default { db, firebase, Timestamp}
+const app = initializeApp(firebaseConfig)
+export const db = getFirestore();
+export const auth = getAuth(app);

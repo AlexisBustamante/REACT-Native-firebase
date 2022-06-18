@@ -1,32 +1,53 @@
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native'
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, ActivityIndicator, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Logo from '../assets/logo.png'
 import SocialSignInButtons from '../components/SocialSignInButtons'
 import CustomInput from "../components/CustomInput"
 import CustomButton from "../components/CustomButton"
+import CustomLoading from "../components/CustomLoading"
+import { auth } from "../database/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth"
 
-const SigninScreen = (props) => {
-
+const SigninScreen = (navigation) => {
   //**STATES */
-  const [username, setUsername] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
   const [password, setpassword] = useState('');
+  const { height } = useWindowDimensions();
 
   //*****functions */
-  const onSignInPress = () => {
-    console.warn('SIGN IN');
+  const onSignInPress = async () => {
+    try {
+      setLoading(true)
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      setLoading(false)
+    } catch (error) {
+      //console.log('catch')
+      setLoading(false)
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      //console.log(error);
+      if (errorCode) {
+        Alert.alert('Ouh!', 'this email or password is wrong');
+      }
+    }
   }
 
   const onForgotPress = () => {
-    console.warn('Forgot');
+    navigation.navigate('ForgotPasswordScreen');
   }
 
   const onRegisterPress = () => {
-    props.navigation.navigate('SignUpScreen');
+    navigation.navigate('SignUpScreen');
   }
 
-  const { height } = useWindowDimensions();
 
   //****VIEWS * /
+  if (loading) {
+    return (
+      <CustomLoading></CustomLoading>
+    )
+  }
   return (
     < ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.root}>
@@ -35,9 +56,9 @@ const SigninScreen = (props) => {
           style={styles.logo, { height: height * 0.3 }}
           resizeMode='contain' />
         <CustomInput
-          placeholder="Username"
-          value={username}
-          setValue={setUsername} />
+          placeholder="Email"
+          value={email}
+          setValue={setEmail} />
         <CustomInput
           placeholder="Password"
           value={password}
@@ -68,17 +89,18 @@ const SigninScreen = (props) => {
 }
 
 
-
 const styles = StyleSheet.create({
   root: {
+    flex: 1,
+    flexDirection: 'column',
     alignItems: "center",
     padding: 20,
-    marginVertical: 35,
   },
   logo: {
     width: "70%",
     height: 200,
     maxWidth: 300,
+    marginVertical: 35,
   },
 
 })

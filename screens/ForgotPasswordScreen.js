@@ -3,14 +3,13 @@ import React, { useEffect, useState } from "react";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 
-const ConfirmEmailScreen = (props) => {
+const ForgotPasswordScreen = (props) => {
     ///*Data
-    const [code, setcode] = useState("");
-
+    const [email, setEmail] = useState("");
 
     ////Functions
-    const onConfirmPress = () => {
-        console.warn("onConfirmPress");
+    const onSendPress = () => {
+        console.warn("onSendPress");
     }
 
     const onSignInPress = () => {
@@ -23,20 +22,15 @@ const ConfirmEmailScreen = (props) => {
 
     return (
         <View style={styles.root}>
-            <Text style={styles.title}>Confirm your email</Text>
+            <Text style={styles.title}>Reset your Password</Text>
             <CustomInput
-                placeholder="enter your confirmation code"
-                value={code}
-                setValue={setcode}
+                placeholder="enter your email"
+                value={email}
+                setValue={setEmail}
             />
             <CustomButton
-                text={"Confirm"}
-                onPress={onConfirmPress}
-            ></CustomButton>
-            <CustomButton
-                text={"Resend code"}
-                onPress={onResendCode}
-                type="SECONDARY"
+                text={"Send"}
+                onPress={onSendPress}
             ></CustomButton>
             <CustomButton
                 text={"Back to Sign in"}
@@ -66,4 +60,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default ConfirmEmailScreen
+export default ForgotPasswordScreen
