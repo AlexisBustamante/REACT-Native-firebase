@@ -7,7 +7,8 @@ import {
     getAuth, createUserWithEmailAndPassword,
     updateProfile, signInWithEmailAndPassword, onAuthStateChanged
 } from "firebase/auth";
-import { auth } from "../database/firebase";
+import { auth, db } from "../database/firebase";
+import { collection, addDoc, setDoc, getDocs, getDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
 
 const SignUpScreen = ({ navigation }) => {
     //**STATES */
@@ -17,6 +18,19 @@ const SignUpScreen = ({ navigation }) => {
     const [passwordRepeat, setPasswordRepeat] = useState("123456");
     const [email, setEmail] = useState("ale6@gmail.com");
 
+    const CreateDocUser = async (user, username) => {
+        const userInfo = {
+            uid: user.uid,
+            email: user.email,
+            name: username,
+            phoneNumber: user.phoneNumber,
+            photoURL: user.photoURL
+        }
+        // await addDoc(collection(db, 'users', user.uid, 'UserInfo'), { userInfo })
+        await setDoc(doc(db, "users", user.uid), userInfo);
+    }
+
+
     //await signInWithEmailAndPassword(auth, email, password);
     //*****functions */
     const onRegisterPress = () => {
@@ -25,7 +39,7 @@ const SignUpScreen = ({ navigation }) => {
             setLoading(true)
             createUserWithEmailAndPassword(auth, email, password)
                 .then(() => {
-
+                    CreateDocUser(auth.currentUser, username);
                 })
                 .catch((error) => {
                     setLoading(false)
@@ -36,7 +50,6 @@ const SignUpScreen = ({ navigation }) => {
         }
 
     };
-
 
     const onTermsPress = () => {
         Alert.alert('Terms', 'I have no terms for this app, yet...')

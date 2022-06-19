@@ -18,7 +18,6 @@ import { auth } from "./database/firebase";
 
 const Stack = createStackNavigator();
 export const AuthenticatedUserContext = createContext({});
-console.log(AuthenticatedUserContext);
 
 const AunthenticatedUserProvider = ({ children }) => {
   const [user, setUser] = useState(null);

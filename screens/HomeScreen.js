@@ -1,11 +1,10 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Button, Text, TextInput, ScrollView, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from "react";
-import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import CustomLoading from "../components/CustomLoading";
-import { async } from '@firebase/util';
-import { auth } from "../database/firebase";
+import { auth, db } from "../database/firebase";
+import { firestore, collection, addDoc, getDocs, getDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
+import CustomList from "../components/CustomList";
 
 const HomeScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
@@ -13,14 +12,39 @@ const HomeScreen = ({ navigation }) => {
     const [userId, setUserId] = useState('');
     const [user, setUser] = useState({});
     const [email, setEmail] = useState('');
+    const [arrayGastos, setArrayGastos] = useState([{}]);
 
     const onLogoutPress = () => {
         signOut(auth)
     }
+
     useEffect(() => {
-        setEmail(auth.currentUser.email)
-        setUserId(auth.currentUser.uid)
-        //console.log('home')
+        const array = [];
+
+        async function getDataUser() {
+            setLoading(true)
+            const docRef = doc(db, "users", auth.currentUser.uid);
+            const docSnap = await getDoc(docRef);
+            setUsername(docSnap.data().name)
+            setUserId(auth.currentUser.uid)
+            setEmail(auth.currentUser.email)
+
+            //obtengo la coleccion de losgatos del usuario
+            const querySnapshot = await getDocs(collection(db, "users", auth.currentUser.uid, "gastos"));
+            querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                let obj = doc.data();
+                obj.id = doc.id;
+                array.push(obj);
+                //console.log(doc.data());
+            });
+            setLoading(false)
+
+        }
+        getDataUser();
+        setArrayGastos(array);
+        console.log(arrayGastos)
+
     }, [])
 
     if (loading) {
@@ -31,6 +55,7 @@ const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.root}>
             <Text style={styles.title}>Welcome!!!</Text>
+            <Text style={styles.title}>{username}</Text>
             <Text style={styles.title}>{email}</Text>
             <Text style={styles.title}>UID: {userId}</Text>
             <CustomButton

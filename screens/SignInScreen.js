@@ -7,6 +7,7 @@ import CustomButton from "../components/CustomButton"
 import CustomLoading from "../components/CustomLoading"
 import { auth } from "../database/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth"
+import { Timestamp, getFirestore, doc } from "firebase/firestore";
 
 const SigninScreen = ({ navigation }) => {
   //**STATES */
