@@ -5,21 +5,22 @@ import CustomButton from "../components/CustomButton";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import CustomLoading from "../components/CustomLoading";
 import { async } from '@firebase/util';
+import { auth } from "../database/firebase";
 
-const HomeScreen = (props) => {
+const HomeScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState('');
     const [userId, setUserId] = useState('');
     const [user, setUser] = useState({});
-
+    const [email, setEmail] = useState('');
 
     const onLogoutPress = () => {
         signOut(auth)
-        props.navigation.navigate("SignInScreen");
     }
-
     useEffect(() => {
-        console.log('home')
+        setEmail(auth.currentUser.email)
+        setUserId(auth.currentUser.uid)
+        //console.log('home')
     }, [])
 
     if (loading) {
@@ -30,7 +31,7 @@ const HomeScreen = (props) => {
     return (
         <View style={styles.root}>
             <Text style={styles.title}>Welcome!!!</Text>
-            <Text style={styles.title}>{username}</Text>
+            <Text style={styles.title}>{email}</Text>
             <Text style={styles.title}>UID: {userId}</Text>
             <CustomButton
                 text={"LOGOUT"}

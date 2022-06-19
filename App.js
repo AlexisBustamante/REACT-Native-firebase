@@ -55,7 +55,7 @@ function RootNavigator() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    onAuthStateChanged(auth,
+    const unsubscribe = onAuthStateChanged(auth,
       async AunthenticatedUser => {
         AunthenticatedUser ? setUser(AunthenticatedUser) : setUser(null);
         setLoading(false);

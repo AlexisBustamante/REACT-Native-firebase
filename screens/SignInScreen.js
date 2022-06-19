@@ -8,7 +8,7 @@ import CustomLoading from "../components/CustomLoading"
 import { auth } from "../database/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth"
 
-const SigninScreen = (navigation) => {
+const SigninScreen = ({ navigation }) => {
   //**STATES */
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
@@ -16,21 +16,16 @@ const SigninScreen = (navigation) => {
   const { height } = useWindowDimensions();
 
   //*****functions */
-  const onSignInPress = async () => {
-    try {
-      setLoading(true)
-      const res = await signInWithEmailAndPassword(auth, email, password);
-      setLoading(false)
-    } catch (error) {
-      //console.log('catch')
-      setLoading(false)
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      //console.log(error);
-      if (errorCode) {
-        Alert.alert('Ouh!', 'this email or password is wrong');
-      }
-    }
+  const onSignInPress = () => {
+
+    setLoading(true)
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => { })
+      .catch((error) => {
+        setLoading(false)
+        Alert.alert('Ouh!', 'this email or password is wrong')
+      })
+
   }
 
   const onForgotPress = () => {

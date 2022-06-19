@@ -7,6 +7,7 @@ import {
     getAuth, createUserWithEmailAndPassword,
     updateProfile, signInWithEmailAndPassword, onAuthStateChanged
 } from "firebase/auth";
+import { auth } from "../database/firebase";
 
 const SignUpScreen = ({ navigation }) => {
     //**STATES */
@@ -15,28 +16,21 @@ const SignUpScreen = ({ navigation }) => {
     const [password, setpassword] = useState("123456");
     const [passwordRepeat, setPasswordRepeat] = useState("123456");
     const [email, setEmail] = useState("ale6@gmail.com");
-    const auth = getAuth();
 
     //await signInWithEmailAndPassword(auth, email, password);
     //*****functions */
-    const onRegisterPress = async () => {
+    const onRegisterPress = () => {
 
         if ((email != '') && (username != '') && (password != '') && (passwordRepeat != '')) {
-            try {
-                setLoading(true)
-                await createUserWithEmailAndPassword(auth, email, password)
-                await updateProfile(auth.currentUser, { displayName: username })
-                // props.navigation.navigate("HomeScreen");
-                console.log(auth.currentUser.displayName + " REGISTRO"); //PRUEBA ASI
-                setLoading(false)
+            setLoading(true)
+            createUserWithEmailAndPassword(auth, email, password)
+                .then(() => {
 
-            } catch (error) {
-                setLoading(false)
-                const errorCode = error.code;
-                if (errorCode) {
-                    Alert.alert("Signup error", error.message);
-                }
-            }
+                })
+                .catch((error) => {
+                    setLoading(false)
+                    Alert.alert("Signup error", "This Email is already in use. Please try again with other Email");
+                })
         } else {
             alert('complete all fields')
         }
