@@ -5,7 +5,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import UsersList from '../screens/UserList';
-import CreateUsersScreen from '../screens/CreateUsersScreen';
+import CreateGastoScreen from '../screens/CreateGastoScreen';
 import UserDetailScreen from '../screens/UserDetailScreen';
 import ConfirmEmailScreen from '../screens/ConfirmEmailScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
@@ -29,7 +29,7 @@ function MyStack() {
                 <Stack.Group>
                     <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: '' }}></Stack.Screen>
                     <Stack.Screen name="UsersList" component={UsersList} options={{ title: 'Lista de usuarios' }}></Stack.Screen>
-                    <Stack.Screen name="CreateUsersScreen" component={CreateUsersScreen} options={{ title: 'Crear Usuario' }}></Stack.Screen>
+                    <Stack.Screen name="CreateGastoScreen" component={CreateGastoScreen} options={{ title: 'Crear Usuario' }}></Stack.Screen>
                     <Stack.Screen name="UserDetailScreen" component={UserDetailScreen} options={{ title: 'Datos del Usuario' }}></Stack.Screen>
                 </Stack.Group>
             ) : (

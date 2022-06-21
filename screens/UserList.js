@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Button, TextInput, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
-import firebase from '../database/firebase'
+import { db } from '../database/firebase'
 import { ListItem, Avatar } from "@rneui/themed";
 
 
@@ -9,7 +9,7 @@ const UsersList = (props) => {
     const [users, setUsers] = useState([])
 
     useEffect(() => {
-        firebase.db.collection('users').orderBy("created", "desc").onSnapshot(querySnapshot => {
+        db.collection('users').orderBy("created", "desc").onSnapshot(querySnapshot => {
             const users = [];
             querySnapshot.docs.forEach(doc => {
                 const { name, email, phone, created } = doc.data();

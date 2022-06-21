@@ -2,10 +2,11 @@ import { View, Text, StyleSheet, Pressable } from 'react-native'
 import React from 'react'
 
 
-const CustomButton = ({ onPress, text, type = "PRIMARY", bgColor, fgColor }) => {
+const CustomButton = ({ onPress, text, type = "PRIMARY", bgColor, fgColor, onlongpress = () => { } }) => {
     return (
         <Pressable
             onPress={onPress}
+            onLongPress={onlongpress}
             style={[styles.container,
             styles[`container_${type}`],
             bgColor ? { backgroundColor: bgColor } : {}]}>
@@ -51,6 +52,33 @@ const styles = StyleSheet.create({
     },
     text_SECONDARY: {
         color: '#3B71f3'
+    },
+    text_CANCEL: {
+        color: 'red'
+    },
+    container_CANCEL: {
+        borderColor: 'red',
+        borderWidth: 2,
+    },
+    container_ROUNDED: {
+        backgroundColor: '#3B71F3',
+        width: 60,
+        height: 60,
+        borderRadius: 60 / 2,
+        borderColor: '#3B71f3',
+        borderWidth: 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: "#F02A4B",
+        shadowOpacity: 0.3,
+        shadowOffser: { height: 10 },
+        position: 'absolute',
+        bottom: 0,
+    },
+    text_ROUNDED: {
+        color: '#3B71f3',
+        fontWeight: 'bold',
+        color: 'white',
     }
 
 })

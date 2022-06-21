@@ -3,7 +3,7 @@ import firebase from "firebase/compat/app"
 import "firebase/compat/firestore";
 import { Timestamp, getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app"
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, SignOut } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCpqNNibkLTsBCXiKjXZfZlXytzA6pvg0E",
